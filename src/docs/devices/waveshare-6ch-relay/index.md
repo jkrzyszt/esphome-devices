@@ -46,6 +46,14 @@ logger:
 # Enable Home Assistant API
 api:
     password: !secret api_password
+  # RTTTL play can be called from Dev Tools or from Scritps.
+  actions:
+  - action: rtttl_play
+    variables:
+      song_str: string
+    then:
+      - rtttl.play:
+          rtttl: !lambda 'return song_str;'
 
 ota:
   - platform: esphome
@@ -60,6 +68,9 @@ captive_portal:
 
 web_server:
   port: 80
+
+bluetooth_proxy:
+  active: true
 
 time:
   - platform: homeassistant
@@ -131,11 +142,11 @@ rtttl:
   gain: 30%
 
 light:
-  - platform: neopixelbus
-    type: RGB
-    variant: 800KBPS
+  - platform: esp32_rmt_led_strip
+    chipset: ws2812
     pin: GPIO38
     num_leds: 1
+    rgb_order: RGB
     name: "RGB LED"
     id: rgb_led
 
